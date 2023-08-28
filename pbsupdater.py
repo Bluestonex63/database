@@ -23,7 +23,7 @@ no2 = 0
 t = time.time()
 for id in fjson:
     alllevels, allcategories, allgames, allgameswithwrs, gamesmostwrs  = [], [], [], [], []
-    allpodiums, allwrs, allILwrs, allFGwrs = 0, 0, 0, 0
+    allpodiums, allwrs, allILwrs, allFGwrs= 0, 0, 0, 0
     deleted = False
     if (no % 50 == 0 and no != 0) and time.time() - t < 40:
         time.sleep(40 - (time.time() - t))

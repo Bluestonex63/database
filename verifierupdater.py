@@ -19,34 +19,34 @@ while True:
             print(fjson[user][0], len(list(fjson.keys()))-list(fjson.keys()).index(user))
             if fjson[user][0] in ["dha", "1", "Reni", "jensj56"]:
                 continue
-            while True:
-                no += 1
-                try:
-                    if time.time() - t < 0.8:
-                        time.sleep(0.8 - (time.time() - t))
-                    o1600 = requests.get(src + f"runs?examiner={user}&max=1&offset=1600").json()
-                    t = time.time()
-                    if "status" in list(o1600.keys()):
-                        if o1600["status"] == 404:
-                            o1600 = []
-                            break
-                        else:
-                            print("We're getting rate limited!", o1600["status"])
-                            time.sleep(10)
-                            continue   
-                    o1600 = o1600["data"]
-                    break
-                except Exception:
-                    if "status" in list(o1600.keys()):
-                        if o1600["status"] == 404:
-                            o1600 = []
-                            break
-                        else:
-                            print("We're getting rate limited!", o1600["status"], "test")
-                            time.sleep(10)
-                            continue
-            if len(o1600) == 0:
-                continue
+            # while True:
+            #     no += 1
+            #     try:
+            #         if time.time() - t < 0.8:
+            #             time.sleep(0.8 - (time.time() - t))
+            #         o1600 = requests.get(src + f"runs?examiner={user}&max=1&offset=1600").json()
+            #         t = time.time()
+            #         if "status" in list(o1600.keys()):
+            #             if o1600["status"] == 404:
+            #                 o1600 = []
+            #                 break
+            #             else:
+            #                 print("We're getting rate limited!", o1600["status"])
+            #                 time.sleep(10)
+            #                 continue   
+            #         o1600 = o1600["data"]
+            #         break
+            #     except Exception:
+            #         if "status" in list(o1600.keys()):
+            #             if o1600["status"] == 404:
+            #                 o1600 = []
+            #                 break
+            #             else:
+            #                 print("We're getting rate limited!", o1600["status"], "test")
+            #                 time.sleep(10)
+            #                 continue
+            # if len(o1600) == 0:
+            #     continue
             allruns = []
             lastrun = {"id": "whadohdwao///"}
             breakeverything = False

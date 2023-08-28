@@ -7,6 +7,7 @@ no, no2 = 0, 0
 t = time.time()
 for id in fjson:
     allruns = []
+    totaltime = 0
     runsIL = 0
     runsFG = 0
     no2 += 1
@@ -42,13 +43,14 @@ for id in fjson:
            break
         lastrun = allruns[-1]
     for run in allruns:
+        totaltime += run["times"]["primary_t"]
         if run["level"] == None:
             runsFG += 1
         else:
             runsIL += 1
-    print(fjson[id][0], len(list(fjson.keys()))-no2, len(allruns), runsFG, runsIL, runsFG + runsIL == len(allruns))
+    print(fjson[id][0], len(list(fjson.keys()))-no2, len(allruns), runsFG, runsIL, totaltime, runsFG + runsIL == len(allruns))
     with open("outputs/runsoutput.txt", "a") as output:
         if deleted:
             continue
         else:
-            output.writelines(f"{id}, {len(allruns)}, {runsFG}, {runsIL}\n")
+            output.writelines(f"{id}, {len(allruns)}, {runsFG}, {runsIL}, {totaltime}\n")
