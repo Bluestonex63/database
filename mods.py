@@ -2,38 +2,50 @@ import requests, json, time
 src = "https://www.speedrun.com/api/v1/"
 
 database = {}
+mods = set()
 t = time.time()
-for offset in range(100000000000):
-    for i in range(5):
-        try:
-            games = requests.get(src + f"games?offset={offset*200}&max=200&embed=moderators").json()["data"]
+delay = 1
+step = 100
+offset = 0
+while True:
+    try:
+        print(step)
+        if step == 0:
+            print(f"jumped offset {offset}")
+            offset += 1
+            step = 100
+        r = requests.get(f"{src}games?offset={offset}&max={step}&embed=moderators",timeout = 60)
+        now = time.time()
+        duration = now - t
+        if duration < delay:
+            sleep_time = delay - (duration)
+            print(f"{step} : {sleep_time}")
+            time.sleep(sleep_time)
+        t = now
+        g = r.json()
+        print(g)
+        games = g["data"]
+        for game in games:
+            for mod in game["moderators"]["data"]:
+                modID = mod.get("id","")
+                if not modID:
+                    continue
+                if modID in mods:
+                    database[modID][2] += 1
+                    continue
+                mods.add(modID)
+                if mod["location"] == None:
+                    flag = ":united_nations:"
+                else:
+                    flag = f':flag_{mod["location"]["country"]["code"][:2]}:'
+                print(f'{modID} : {mod["names"]["international"]}, {flag}, 1', offset)
+                database[modID] = [mod["names"]["international"], flag, 1]
+        offset += step
+        if len(games) < step:
             break
-        except Exception:
-            time.sleep(5)
-            continue
-    if time.time() - t < 0.7:
-        try:
-            time.sleep(0.7 - (time.time() - t))
-            t = time.time()
-        except Exception:
-            t = time.time()
-    for game in games:
-        for mod in game["moderators"]["data"]:
-            try:
-                id = mod["id"]
-            except Exception:
-                continue
-            if id in list(database.keys()):
-                database[id][2] += 1
-                continue
-            if mod["location"] == None:
-                flag = ":united_nations:"
-            else:
-                flag = f':flag_{mod["location"]["country"]["code"][:2]}:' 
-            print({id: [mod["names"]["international"], flag, 1]}, offset*200)
-            database.update({id: [mod["names"]["international"], flag, 1]})
-    if len(games) < 200:
-        break
+    except Exception:
+        step = step//2
+        continue
 
 with open("vdatabase.json", "a") as vd:
     vd.truncate(0)
